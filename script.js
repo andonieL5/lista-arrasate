@@ -1,5 +1,5 @@
 // ==========================================
-// FIREBASE APP - LISTA FAMILIAR
+// FIREBASE APP - LISTA PISO ESTUDIANTES
 // ==========================================
 
 import {
@@ -27,20 +27,20 @@ import {
 
 
 // ==========================================
-// CONFIGURACIÓN FIREBASE
+// CONFIGURACIÓN FIREBASE (PROYECTO PISO)
 // ==========================================
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCqTIkaoO62UIMZPcRpaQdbdTvE5ZXYKE8",
-    authDomain: "lista-familiar-3a05d.firebaseapp.com",
-    projectId: "lista-familiar-3a05d",
-    storageBucket: "lista-familiar-3a05d.firebasestorage.app",
-    messagingSenderId: "343672850288",
-    appId: "1:343672850288:web:771de65690748505b0b1b5"
+    apiKey: "TU_NUEVA_API_KEY",
+    authDomain: "TU_NUEVO_PROJECT_ID.firebaseapp.com",
+    projectId: "TU_NUEVO_PROJECT_ID",
+    storageBucket: "TU_NUEVO_PROJECT_ID.firebasestorage.app",
+    messagingSenderId: "TU_NUEVO_MESSAGING_SENDER_ID",
+    appId: "TU_NUEVO_APP_ID"
 };
 
 console.log("==========================================");
-console.log("LISTA FAMILIAR");
+console.log("LISTA PISO ESTUDIANTES");
 console.log("Firebase projectId:", firebaseConfig.projectId);
 console.log("Firebase appId:", firebaseConfig.appId);
 console.log("==========================================");
@@ -66,7 +66,7 @@ const db =
 // ==========================================
 
 const FAMILIA_ID =
-    "familia-andoni";
+    "piso-arrasate";
 
 const listaRef =
     collection(
@@ -119,7 +119,6 @@ const produktuKopurua =
 const listaCompra = {};
 
 let unsubscribeLista = null;
-
 
 // Evita que un mismo botón de check
 // reciba dos acciones simultáneas.
@@ -362,15 +361,8 @@ async function añadirProducto(
 
 
                 // ----------------------------------
-                // MUY IMPORTANTE
-                //
                 // SOLO modificamos cantidad/unidad.
-                //
                 // NO escribimos checked.
-                //
-                // Por tanto:
-                // checked queda exactamente como estaba
-                // en Firebase.
                 // ----------------------------------
 
                 transaction.update(
@@ -506,7 +498,6 @@ async function cambiarCantidad(
 
                 // ----------------------------------
                 // CAMBIAR CANTIDAD
-                //
                 // NO TOCAMOS checked.
                 // ----------------------------------
 
@@ -567,20 +558,6 @@ async function eliminarProducto(
 // ==========================================
 // CAMBIAR CHECK
 // ==========================================
-//
-// ESTA ES LA PARTE NUEVA IMPORTANTE.
-//
-// No utilizamos runTransaction para el check.
-// Utilizamos updateDoc().
-//
-// Además:
-//
-// 1. Actualizamos inmediatamente la interfaz.
-// 2. Actualizamos listaCompra local.
-// 3. Guardamos el valor exacto en Firebase.
-// 4. Evitamos doble toque.
-// 5. Si falla Firebase hacemos rollback.
-//
 
 async function cambiarCheck(
     producto,
@@ -1242,19 +1219,6 @@ function mostrarLista() {
                         }
 
 
-                        // ----------------------------------
-                        // CHECK
-                        // ----------------------------------
-                        //
-                        // Importante:
-                        //
-                        // NO usamos aquí un listener
-                        // que dependa del DOM anterior.
-                        //
-                        // El listener queda asociado
-                        // directamente al botón actual.
-                        // ----------------------------------
-
                         check.addEventListener(
                             "click",
                             function (evento) {
@@ -1272,10 +1236,6 @@ function mostrarLista() {
                             }
                         );
 
-
-                        // También evitamos que ciertos
-                        // móviles interpreten una pulsación
-                        // larga como otra acción.
 
                         check.addEventListener(
                             "touchstart",
@@ -1543,10 +1503,6 @@ function mostrarLista() {
 
 function iniciarListenerFirestore() {
 
-    // --------------------------------------
-    // CANCELAR LISTENER ANTERIOR
-    // --------------------------------------
-
     if (unsubscribeLista) {
 
         unsubscribeLista();
@@ -1573,10 +1529,6 @@ function iniciarListenerFirestore() {
                 );
 
 
-                // ----------------------------------
-                // CREAR NUEVO ESTADO
-                // ----------------------------------
-
                 const nuevoEstado = {};
 
 
@@ -1595,21 +1547,6 @@ function iniciarListenerFirestore() {
                             return;
                         }
 
-
-                        // ----------------------------------
-                        // CHECK
-                        // ----------------------------------
-                        //
-                        // Si Firebase tiene:
-                        //
-                        // checked: true
-                        //
-                        // guardamos true.
-                        //
-                        // Si no existe o es false:
-                        //
-                        // false.
-                        // ----------------------------------
 
                         const checked =
                             datos.checked === true;
@@ -1648,10 +1585,6 @@ function iniciarListenerFirestore() {
                 );
 
 
-                // ----------------------------------
-                // REEMPLAZAR ESTADO LOCAL
-                // ----------------------------------
-
                 Object.keys(
                     listaCompra
                 ).forEach(
@@ -1667,10 +1600,6 @@ function iniciarListenerFirestore() {
                     nuevoEstado
                 );
 
-
-                // ----------------------------------
-                // DIBUJAR
-                // ----------------------------------
 
                 mostrarLista();
             },
@@ -1766,10 +1695,6 @@ onAuthStateChanged(
     auth,
     function (usuario) {
 
-        // --------------------------------------
-        // USUARIO CONECTADO
-        // --------------------------------------
-
         if (usuario) {
 
             console.log(
@@ -1814,10 +1739,6 @@ onAuthStateChanged(
         }
 
 
-        // --------------------------------------
-        // SIN USUARIO
-        // --------------------------------------
-
         console.log(
             "No hay usuario conectado"
         );
@@ -1845,10 +1766,6 @@ onAuthStateChanged(
             false;
 
 
-        // --------------------------------------
-        // PARAR LISTENER
-        // --------------------------------------
-
         if (unsubscribeLista) {
 
             unsubscribeLista();
@@ -1856,10 +1773,6 @@ onAuthStateChanged(
             unsubscribeLista = null;
         }
 
-
-        // --------------------------------------
-        // LIMPIAR LISTA LOCAL
-        // --------------------------------------
 
         Object.keys(
             listaCompra
@@ -2029,17 +1942,5 @@ document.addEventListener(
 // ==========================================
 
 console.log(
-    "Lista Familiar JS cargado correctamente."
-);
-
-console.log(
-    "Sistema de checks Firebase: ACTIVO"
-);
-
-console.log(
-    "Sistema anti doble toque móvil: ACTIVO"
-);
-
-console.log(
-    "Preservación de checked al añadir productos: ACTIVA"
+    "Lista Piso JS cargado correctamente."
 );
